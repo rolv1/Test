@@ -5,7 +5,7 @@ import { Text, View, FlatList, StyleSheet, Image } from 'react-native'
 const Item = ({ title }) => (
     <View style={styles.item}>
         <Text style={styles.title}>{title}</Text>
-        <Image source={{ uri: }} />
+        {/* <Image source={{ uri: }} /> */}
     </View>
 );
 
