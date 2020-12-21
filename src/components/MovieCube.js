@@ -13,7 +13,7 @@ const MovieCube = (props) => {
             onPress={props.onPress}
         >
             <View style={styles.item}>
-                <View style={{ backgroundColor: '#3D3D3D', flex: 1 }}>
+                <View style={{ backgroundColor: '#3D3D3D', flex: 1, alignItems: 'center' }}>
                     <Text style={styles.title}>{props.title}</Text>
                 </View>
 
@@ -42,8 +42,10 @@ const styles = StyleSheet.create({
 
     },
     title: {
-        fontSize: 32,
-        color: 'white'
+        fontSize: 30,
+        color: 'white',
+        alignSelf: 'center',
+        marginRight: 5
     }
 });
 
