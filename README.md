@@ -1,4 +1,4 @@
 # Install and run on android
-cd Test
-npm install
-react-native run-android
+cd Test<br/>
+npm install<br/>
+react-native run-android<br/>
