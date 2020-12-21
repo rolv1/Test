@@ -6,20 +6,15 @@ import {
     StyleSheet,
     Button,
     ScrollView,
-    Modal,
-    TouchableHighlight
 } from 'react-native'
-import { changeFavorites } from '../actions/favorites'
 import Header from './Header'
 
+
 export class MovieComp extends Component {
-
-
     // true is item in cart, false otherwise
     isInFlag = () => {
         let flag = false
         this.props.lstObj.lstObj.list.forEach(element => {
-            console.log("elemet: ", element[0], "and: ", this.props.route.params.itemId.toString(), "so ", element[0] == this.props.route.params.itemId.toString())
             if (element[0] === this.props.route.params.itemId.toString())
                 flag = true
         });
@@ -43,9 +38,6 @@ export class MovieComp extends Component {
 
                 </View>
 
-
-
-
                 <View style={styles.details}>
                     <ScrollView>
                         <Text
@@ -66,17 +58,13 @@ export class MovieComp extends Component {
                         <Button
                             title='Add to favorite list'
                             color='green'
-
+                            // implementing adding a movie to our favorite list
                             onPress={() => {
-
                                 let newList = [...(this.props.lstObj.lstObj.list)]
-                                console.log("newList1: ", newList, "and ", this.props.route.params.itemId.toString())
-
                                 newList.push([
                                     this.props.route.params.itemId.toString(),
                                     this.props.route.params.itemName,
                                     this.props.route.params.itemImg
-
                                 ])
 
                                 let count = this.props.lstObj.lstObj.count + 1
@@ -84,7 +72,6 @@ export class MovieComp extends Component {
                                     list: newList,
                                     count: count
                                 });
-                                console.log("newObj: ", this.props.lstObj.lstObj)
                             }}
 
                         />
@@ -94,8 +81,8 @@ export class MovieComp extends Component {
                         <Button
                             title='Remove from favorite list'
                             color='green'
+                            // implementing removing a movie to our favorite list
                             onPress={() => {
-                                console.log("fav2")
                                 let newList = [...(this.props.lstObj.lstObj.list)]
                                 let index = newList.indexOf(toString(this.props.route.params.itemId))
                                 newList.splice(index, 1)
@@ -109,8 +96,6 @@ export class MovieComp extends Component {
 
                         />
                     </View>
-
-
                 </View>
             </View>
         )

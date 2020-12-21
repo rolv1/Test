@@ -61,8 +61,6 @@ class Header extends Component {
                                 {this.props.list.map((item) => {
                                     return (
                                         <View key={item[0]} style={styles.itemStyle}>
-                                            {console.log("item in header", item)}
-
                                             <View style={{ flex: 1 }}>
                                                 <Text style={styles.titleStyle}>{item[1]}</Text>
                                             </View>
