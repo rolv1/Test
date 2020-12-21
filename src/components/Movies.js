@@ -1,16 +1,25 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, StyleSheet, Image } from 'react-native'
+import {
+    View,
+    FlatList,
+    StyleSheet,
+} from 'react-native'
+
+import { createStackNavigator } from '@react-navigation/stack';
+
+import MovieComp from './MovieComp'
+import MovieCube from './MovieCube'
+import Header from './Header'
+
+import { connect } from 'react-redux'
+import { changeUser } from '../actions/users'
+import { changeFavorites } from '../actions/favorites'
+import { bindActionCreators } from 'redux'
 
 
-const Item = ({ title }) => (
-    <View style={styles.item}>
-        <Text style={styles.title}>{title}</Text>
-        {/* <Image source={{ uri: }} /> */}
-    </View>
-);
+const PREFIX = 'https://image.tmdb.org/t/p/w500'
 
-
-export default class Movies extends Component {
+class MoviesPage extends Component {
     constructor() {
         super();
         this.state = {
@@ -19,7 +28,7 @@ export default class Movies extends Component {
 
         }
     }
-
+    // fetch the data from the API
     componentDidMount() {
         fetch('https://api.themoviedb.org/3/movie/popular?api_key=247082c0fd9674d69377c506d2b38e04&language=en-US&page=1&language=en-US&page=1')
             .then((response) => response.json())
@@ -35,40 +44,98 @@ export default class Movies extends Component {
 
 
     renderItem = ({ item }) => (
-        <Item title={item.title} uriLink={item.backdrop_path} />
+        <MovieCube
+            title={item.title}
+            uriLink={PREFIX + item.backdrop_path}
+            onPress={() => {
+                this.props.navigation.navigate('MovieComp', {
+                    itemId: item.id,
+                    itemName: item.title,
+                    itemImg: (PREFIX + item.backdrop_path),
+                    rating: item.vote_average,
+                    itemOverview: item.overview
+                })
+
+            }}
+        />
     );
 
 
 
     render() {
-        (console.log(this.state.data))
         return (
             <View>
-                <Text> textInComponent </Text>
-                <FlatList
-                    data={this.state.data.results}
-                    renderItem={this.renderItem}
-                    keyExtractor={item => item.id}
-                    initialNumToRender={5}
+                <Header
+                    count={this.props.lstObj.lstObj.count}
+                    list={this.props.lstObj.lstObj.list}
                 />
+                <View style={{ height: '88%' }}>
+
+                    <FlatList
+                        data={this.state.data.results}
+                        renderItem={this.renderItem}
+                        keyExtractor={item => item.id.toString()}
+                        initialNumToRender={5}
+                        contentContainerStyle={{ paddingBottom: 40 }}
+                    />
+                </View>
             </View>
         )
     }
 }
 
-const styles = StyleSheet.create({
+const StackMovies = createStackNavigator();
+function Movies(props) {
+    return (
+        <StackMovies.Navigator initialRouteName="Movies"  >
 
+            <StackMovies.Screen options={{ headerShown: false }} name="MovieComp" component={MovieCompContainer} />
+            <StackMovies.Screen options={{ headerShown: false }} name="Movies" component={MoviePageContainer} />
+
+        </StackMovies.Navigator>
+    );
+}
+export default Movies
+
+const styles = StyleSheet.create({
     container: {
         flex: 1
-
     },
     item: {
         backgroundColor: 'gray',
+        width: '90%',
+        alignSelf: 'center',
         padding: 20,
         marginVertical: 8,
         marginHorizontal: 16,
+        display: 'flex',
+        flexDirection: 'row'
+
     },
     title: {
         fontSize: 32,
     }
 });
+
+// Pick the props that we will use
+const mapStateToProps = state => ({
+    user: state.user,
+    count: state.count,
+    lstObj: state.lstObj
+});
+
+
+// Pick the actions that we will use
+const ActionCreators = Object.assign(
+    {},
+    { changeUser },
+    { changeFavorites },
+);
+
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(ActionCreators, dispatch),
+});
+// Connect the screens to Redux
+let MoviePageContainer = connect(mapStateToProps, mapDispatchToProps)(MoviesPage)
+let MovieCompContainer = connect(mapStateToProps, mapDispatchToProps)(MovieComp)
